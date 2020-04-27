@@ -1,0 +1,24 @@
+{
+    "name": "fuzzy-linter-js",
+    "version": "1.0.0",
+    "description": "Linter for JS, which is based on fuzzy logic",
+    "type": "module",
+    "main": "index.js",
+    "dependencies": {
+        "esprima": "^4.0.1"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Godis715/Fuzzy-Linter-JS.git"
+    },
+    "author": "",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/Godis715/Fuzzy-Linter-JS/issues"
+    },
+    "homepage": "https://github.com/Godis715/Fuzzy-Linter-JS#readme"
+}
