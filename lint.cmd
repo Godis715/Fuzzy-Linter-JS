@@ -1,1 +1,1 @@
-node --experimental-modules src/index.js %1
+node --experimental-modules src/JS/index.js %1

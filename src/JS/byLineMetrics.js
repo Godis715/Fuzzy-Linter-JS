@@ -19,7 +19,7 @@ export default function getByLineMetrics(source) {
 
     const byLineMetrics = lines.map(
         (line, li) => ({
-            lineLength: line.length,
+            lineLength: line.trim().length,
             tokensCount: tokensByLines[li].length,
         })
     );
