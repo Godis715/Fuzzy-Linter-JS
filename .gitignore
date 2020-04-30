@@ -108,3 +108,7 @@ dist
 src/matlab/codegen
 src/matlab/*.prj
 src/matlab/*.exe
+
+examples
+*.html
+*.txt

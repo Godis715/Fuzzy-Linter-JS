@@ -1,26 +1,61 @@
 import byLineMetrics from "./byLineMetrics.js";
-import fs from "fs";
+import escapeHtml from "./escapeHtml.js";
+import generateStatusColor from "./generateStatusColor.js";
 import { execSync } from "child_process";
 import { resolve } from "path";
+import fs from "fs";
 
 const sourcePath = process.argv[2];
-const source = fs.readFileSync(sourcePath, "utf8");
 
-const metrics = byLineMetrics(source);
+const source = fs.readFileSync(sourcePath, "utf8");
+const template = fs.readFileSync(
+    resolve("src/template/template.html"),
+    "utf8"
+);
 
 const lines = source.split(/\r?\n/);
 
+const metrics = byLineMetrics(source);
+
+const bestResult = execLinter(0, 0, 0);
+// exec linter on the worst case
+const worstResult = execLinter(200, 30, 10);
+const htmlLines = [];
+
 metrics.forEach(
     (m, i) => {
-        const buffer = execSync(
-            `${resolve("./src/fis/lint.exe")} ${m.lineLength} ${m.tokensCount}`,
-            "utf8"
-        );
-        const result = parseFloat(buffer.toString("utf-8")) / 0.9;
-        const green = (result >= 0.5) ? 255 : (255 * 2 * result);
-        const red = (result <= 0.5) ? 255 : (255 * (2 - 2 * result));
-        const color = `rgb(${red}, ${green}, 0)`;
-        const html = `<div style="white-space: pre; font-family: monospace"><span style="background-color: ${color}; white-space: pre; margin-right: 8px">  </span>${lines[i]}</div>`;
-        console.log(html);
+        const result = execLinter(m.lineLength, m.tokensCount, m.maxBraceNesting);
+
+        const normResult = normalize(result, worstResult, bestResult);
+        const color = generateStatusColor(normResult);
+
+        const coloredStatus = `<span class="status-block" style="background-color: ${color}"> </span>`;
+        const htmlLine = `<div class="code">${coloredStatus}${escapeHtml(lines[i])}</div>`;
+        htmlLines.push(htmlLine);
     }
-)
+);
+
+const codeHtml = htmlLines.join("\n");
+const htmlResult = template
+    .replace("{code}", codeHtml)
+    .replace("{stylePath}", resolve("src/CSS/stylesheet.css"));
+
+console.log(htmlResult);
+
+function execLinter(a1, a2, a3) {
+    // cut values to max value
+    a1 = a1 > 200 ? 200 : a1;
+    a2 = a2 > 30 ? 30 : a2;
+    a3 = a3 > 7 ? 7 : a3;
+    
+    const buffer = execSync(
+        `${resolve("./src/MatLab/lint.exe")} ${a1} ${a2} ${a3} 0`,
+        "utf8"
+    );
+    const result = parseFloat(buffer.toString("utf-8"));
+    return result;
+}
+
+function normalize(value, min, max) {
+    return (value - min) / (max - min);
+}

@@ -38,11 +38,11 @@
 #include "lint_terminate.h"
 #include "rt_nonfinite.h"
 
-static void main_lint(double a1, double a2) {
+static void main_lint(double a1, double a2, double a3, double a4) {
     double result;
 
     /* Call the entry-point 'lint'. */
-    result = lint(a1, a2);
+    result = lint(a1, a2, a3, a4);
     printf("%g", result);
 }
 
@@ -50,6 +50,8 @@ int main(int argc, char* argv[]) {
     /* The initialize function is being called automatically from your entry-point function. So, a call to initialize is not included here. */
     /* Invoke the entry-point functions. You can call entry-point functions multiple times. */
     main_lint(
+        strtod(argv[argc - 4], NULL),
+        strtod(argv[argc - 3], NULL),
         strtod(argv[argc - 2], NULL),
         strtod(argv[argc - 1], NULL)
     );

@@ -1,0 +1,11 @@
+body {
+    font-family: monospace;
+}
+
+.status-block {
+    margin-right: 8px;
+}
+
+.code {
+    white-space: pre;
+}
